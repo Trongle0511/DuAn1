@@ -18,7 +18,7 @@ public abstract class EduSysDAO<E, K> {
 
     abstract public void delete(K key);
 
-    abstract public List<E> selectAll();
+    abstract public  List<E> selectAll();
 
     abstract public E selectById(K key);
 

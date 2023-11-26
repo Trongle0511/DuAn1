@@ -1,13 +1,34 @@
+package ui;
+
+import dao.NhanVienDAO;
+import dao.sanPhamDao;
+import entity.NhanVien;
+import entity.SanPham1;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
+
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-
 /**
  *
  * @author PC
  */
 public class QuanLyHoaDon extends javax.swing.JDialog {
+
+    int row = -1;
+    String[] tencot = new String[]{"Tên sản phẩm", "Giá sản phẩm"};
+    DefaultTableModel model = new DefaultTableModel(tencot, 0);
 
     /**
      * Creates new form abc
@@ -15,6 +36,9 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
     public QuanLyHoaDon(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        fillTable();
+        
+
     }
 
     /**
@@ -53,11 +77,11 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
         txtTenMon3 = new javax.swing.JTextField();
         lblGiaDS3 = new javax.swing.JLabel();
         txtGia3 = new javax.swing.JTextField();
-        jsnSoLuong3 = new javax.swing.JSpinner();
         lblSoLuong3 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        txttongTien3 = new javax.swing.JTextField();
+        txtsoLuong = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
@@ -175,15 +199,28 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
 
         tblDanhSachDoUong3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
             },
             new String [] {
-                "STT", "TÊN MÓN", "GIÁ"
+                "TÊN MÓN", "GIÁ"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblDanhSachDoUong3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDanhSachDoUong3MouseClicked(evt);
+            }
+        });
         jScrollPane4.setViewportView(tblDanhSachDoUong3);
 
         btnFirst3.setText("|<");
@@ -214,7 +251,18 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel6.setText("Tổng tiền");
 
-        jTextField4.setEditable(false);
+        txttongTien3.setEditable(false);
+
+        txtsoLuong.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtsoLuongActionPerformed(evt);
+            }
+        });
+        txtsoLuong.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtsoLuongKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jpnDanhSachDoUong3Layout = new javax.swing.GroupLayout(jpnDanhSachDoUong3);
         jpnDanhSachDoUong3.setLayout(jpnDanhSachDoUong3Layout);
@@ -222,39 +270,38 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
             jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpnDanhSachDoUong3Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jpnDanhSachDoUong3Layout.createSequentialGroup()
                         .addComponent(lblSoLuong3, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jsnSoLuong3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpnDanhSachDoUong3Layout.createSequentialGroup()
-                            .addComponent(lblTimKiem3)
-                            .addGap(18, 18, 18)
-                            .addComponent(txtTimKiem3, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jpnDanhSachDoUong3Layout.createSequentialGroup()
-                            .addComponent(btnFirst3, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(56, 56, 56)
-                            .addComponent(btnPrev3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(61, 61, 61)
-                            .addComponent(btnNext3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnLast3, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpnDanhSachDoUong3Layout.createSequentialGroup()
-                            .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblTenMonDS3)
-                                .addComponent(lblGiaDS3)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(18, 18, 18)
-                            .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtGia3)
-                                .addComponent(txtTenMon3)
-                                .addGroup(jpnDanhSachDoUong3Layout.createSequentialGroup()
-                                    .addGap(57, 57, 57)
-                                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(0, 0, Short.MAX_VALUE))
-                                .addComponent(jTextField4)))))
+                        .addComponent(txtsoLuong))
+                    .addGroup(jpnDanhSachDoUong3Layout.createSequentialGroup()
+                        .addComponent(lblTimKiem3)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtTimKiem3, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnDanhSachDoUong3Layout.createSequentialGroup()
+                        .addComponent(btnFirst3, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(56, 56, 56)
+                        .addComponent(btnPrev3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(61, 61, 61)
+                        .addComponent(btnNext3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnLast3, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jpnDanhSachDoUong3Layout.createSequentialGroup()
+                        .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblTenMonDS3)
+                            .addComponent(lblGiaDS3)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtGia3)
+                            .addComponent(txtTenMon3)
+                            .addGroup(jpnDanhSachDoUong3Layout.createSequentialGroup()
+                                .addGap(57, 57, 57)
+                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(txttongTien3))))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
         jpnDanhSachDoUong3Layout.setVerticalGroup(
@@ -283,12 +330,12 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
                 .addGap(16, 16, 16)
                 .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblSoLuong3)
-                    .addComponent(jsnSoLuong3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtsoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
                 .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                    .addComponent(txttongTien3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                 .addComponent(jButton4)
                 .addContainerGap())
         );
@@ -529,6 +576,21 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tblDanhSachDoUong3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDanhSachDoUong3MouseClicked
+        // TODO add your handling code here:
+        this.row = tblDanhSachDoUong3.getSelectedRow();
+        this.edit();
+    }//GEN-LAST:event_tblDanhSachDoUong3MouseClicked
+
+    private void txtsoLuongKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtsoLuongKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtsoLuongKeyTyped
+
+    private void txtsoLuongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtsoLuongActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_txtsoLuongActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -570,6 +632,8 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
+        
+//        SwingUtilities.invokeLater(() -> new 
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -601,11 +665,9 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JLabel jlabel;
     private javax.swing.JPanel jpnDanhMuc;
     private javax.swing.JPanel jpnDanhSachDoUong3;
-    private javax.swing.JSpinner jsnSoLuong3;
     private javax.swing.JLabel lblGiaDS3;
     private javax.swing.JLabel lblGiamGia;
     private javax.swing.JLabel lblMaNV;
@@ -625,5 +687,113 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
     private javax.swing.JTextField txtTenMon3;
     private javax.swing.JTextField txtTimKiem3;
     private javax.swing.JTextField txtTongTien;
+    private javax.swing.JTextField txtsoLuong;
+    private javax.swing.JTextField txttongTien3;
     // End of variables declaration//GEN-END:variables
+
+    void fillTable() {
+        DefaultTableModel model = (DefaultTableModel) tblDanhSachDoUong3.getModel();
+        model.setRowCount(0);
+        try {
+            ArrayList<SanPham1> list = sanPhamDao.khoiTao().selectAll();
+            for (SanPham1 sp : list) {
+                Object[] row = {sp.getTenSP(), sp.getGiaSP()
+                };
+                model.addRow(row);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+ void setForm(SanPham1 sp) {
+        txtTenMon3.setText(sp.getTenSP());
+        txtGia3.setText(String.valueOf(sp.getGiaSP()));
+        txtsoLuong.setText("1");
+        
+//        if (txtsoLuong.getText().equals("1")) {
+//            double giaTien = Double.parseDouble(txtGia3.getText());
+//            double soLuong = Double.parseDouble(txtsoLuong.getText());
+//
+//            txttongTien3.setText(String.valueOf(giaTien * soLuong));
+//        }else if (txtsoLuong.getText().equals("2")) {
+//            double giaTien = Double.parseDouble(txtGia3.getText());
+//            double soLuong = Double.parseDouble(txtsoLuong.getText());
+//
+//            txttongTien3.setText(String.valueOf(giaTien * soLuong));
+//        }
+
+//        double tongTien = 0.0;
+//        txtsoLuong.addKeyListener(new KeyListener() {
+//            @Override
+//            public void keyTyped(KeyEvent e) {
+//            }
+//
+//            @Override
+//            public void keyPressed(KeyEvent e) {
+//            }
+//
+//            @Override
+//            public void keyReleased(KeyEvent e) {
+//                updateTien();
+//            }
+//        });
+//        double giaSp = Double.parseDouble(txtGia3.getText());
+//        double soLuongSP = Double.parseDouble(txtsoLuong.getText());
+//        txttongTien3.setText(String.valueOf(giaSp*soLuongSP));
+                txtsoLuong.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
+                updateTongTien();
+ }
+ 
+ 
+ private void updateTongTien() {
+     double tongTien;
+     double giaBan = Double.parseDouble(txtGia3.getText());
+        try {
+            int soLuong = Integer.parseInt(txtsoLuong.getText());
+            tongTien = giaBan * soLuong;
+            txttongTien3.setText("" + tongTien);
+        } catch (NumberFormatException ex) {
+            txtsoLuong.setText("Nhập số hợp lệ");
+        }
+        
+    }
+
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> new TinhTongTien());
+//    }
+//}
+//
+//    private void updateTien() {
+//        double tongTien = Double.parseDouble(txtGia3.getText());
+//        try {
+//            double giaTriNhap = Double.parseDouble(txtsoLuong.getText());
+//            tongTien = tongTien * giaTriNhap;
+//        } catch (Exception e) {
+//
+//        }
+//    }
+
+    void edit() {
+        String manh = (String) tblDanhSachDoUong3.getValueAt(this.row, 0);
+        SanPham1 sp = new sanPhamDao().selectByID(manh);
+        this.setForm(sp);
+
+    }
+
+    void giaBan() {
+
+    }
+
 }

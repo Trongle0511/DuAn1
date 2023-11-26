@@ -76,7 +76,6 @@ ngayHD datetime not null,
 tongTien int not null,
 diemTL int not null,
 giamGia int,
-chiPhiKhac int ,
 Constraint pk_hoaDon primary key (maHD),
 Constraint fk_hoadon_maNV foreign key (maNV) references nhanVien (maNV),
 Constraint fk_hoaDon_maKH foreign key (maKH) references khachHang (maKh)
@@ -211,13 +210,13 @@ INSERT INTO khachHang VALUES
 
 -- Bảng hoaDon
 INSERT INTO hoaDon VALUES
-('HD001', 'NV001', 'KH001', '2023-03-01', 500000, 10, 50, 20000);
+('HD001', 'NV001', 'KH001', '2023-03-01', 500000, 10, 50);
 INSERT INTO hoaDon VALUES
-('HD002', 'NV002', 'KH002', '2023-03-02', 800000, 20, 30, 15000);
+('HD002', 'NV002', 'KH002', '2023-03-02', 800000, 20, 30);
 INSERT INTO hoaDon VALUES
-('HD003', 'NV003', 'KH003', '2023-03-03', 1200000, 15, 20, 10000);
+('HD003', 'NV003', 'KH003', '2023-03-03', 1200000, 15, 20);
 INSERT INTO hoaDon VALUES
-('HD004', 'NV004', 'KH004', '2023-03-04', 1000000, 25, 40, 18000);
+('HD004', 'NV004', 'KH004', '2023-03-04', 1000000, 25, 40);
 
 -- Bảng caLamViec
 INSERT INTO caLamViec VALUES
@@ -287,6 +286,16 @@ INSERT INTO diemDanh VALUES
 ('DD003', 'NV003', 20);
 INSERT INTO diemDanh VALUES
 ('DD004', 'NV004', 23);
+
+select tenSP,giaSP from sanpham where tenSP = N'cafe muối'
+maHD nvarchar(10) not null,
+maNV nvarchar(10) not null,
+maKH nvarchar(10) not null,
+ngayHD datetime not null,
+tongTien int not null,
+diemTL int not null,
+giamGia int,
+chiPhiKhac int ,
 --select maNV , matkhau from nhanVien
 --select * from nhanVien
 --select * from loaiHang
