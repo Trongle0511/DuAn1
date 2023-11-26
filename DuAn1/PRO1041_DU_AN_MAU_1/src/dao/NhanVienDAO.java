@@ -14,40 +14,40 @@ import utils.JdbcHelper;
  *
  * @author Admin
  */
-public class NhanVienDAO extends EduSysDAO<NhanVien, String> {
+public class NhanVienDAO  {
 
-    @Override
+
     public void insert(NhanVien entity) {
         String INSERT_SQL = "insert into NhanVien(MaNV, tenNV, gioiTinh, chucVu, ngayVaoLam, diaChi, soDT, matKhau, khuVuc) values (?,?,?,?,?,?,?,?,?)";
         JdbcHelper.update(INSERT_SQL, entity.getMaNV(), entity.getTenNV(), entity.isGioiTinh(), entity.isChucvu(),entity.getNgayVaoLam(),entity.getDiaChi(),entity.getSoDT(),entity.getMatKhau(),entity.getKhuVuc());
     }
 
-    @Override
+
     public void update(NhanVien entity) {
         String UPDATE_SQL = "UPDATE NhanVien SET tenNV=?, gioiTinh=?, chucVu=?, ngayVaoLam=?, diachi=?,soDT=?, matKhau=?, khuVuc=? WHERE MaNV=?";
         JdbcHelper.update(UPDATE_SQL, entity.getTenNV(), entity.isGioiTinh(), entity.isChucvu(),entity.getNgayVaoLam(),entity.getDiaChi(),entity.getSoDT(),entity.getMatKhau(),entity.getKhuVuc());
     }
 
-    @Override
+
     public void delete(String key) {
         String DELETE_SQL = "DELETE FROM NhanVien WHERE MaNV=?";
         JdbcHelper.update(DELETE_SQL, key);
     }
 
-    @Override
+
     public List<NhanVien> selectAll() {
         String SELECT_ALL_SQL = "SELECT * FROM NhanVien";
         return this.selectBySql(SELECT_ALL_SQL);
     }
 
-    @Override
+
     public NhanVien selectById(String key) {
         String SELECT_BY_ID = "SELECT * FROM NhanVien WHERE MaNV=?";
         List<NhanVien> list = this.selectBySql(SELECT_BY_ID, key);
         return list.size() > 0 ? list.get(0) : null;
     }
 
-    @Override
+
     protected List<NhanVien> selectBySql(String sql, Object... args) {
         List<NhanVien> list = new ArrayList<>();
         try {

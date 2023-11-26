@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-
+package ui;
 /**
  *
  * @author PC
@@ -175,13 +175,13 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
 
         tblDanhSachDoUong3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
             },
             new String [] {
-                "STT", "TÊN MÓN", "GIÁ"
+                "TÊN MÓN", "GIÁ"
             }
         ));
         jScrollPane4.setViewportView(tblDanhSachDoUong3);
@@ -303,13 +303,13 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
 
         tblHoaDon.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "STT", "TÊN MÓN ", "GIÁ BÁN ", "SỐ LƯỢNG", "TỔNG TIỀN"
+                "TÊN MÓN ", "GIÁ BÁN ", "SỐ LƯỢNG", "TỔNG TIỀN"
             }
         ));
         jScrollPane5.setViewportView(tblHoaDon);
