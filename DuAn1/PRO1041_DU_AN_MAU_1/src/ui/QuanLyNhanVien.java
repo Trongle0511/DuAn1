@@ -1,9 +1,11 @@
 package ui;
 import dao.NhanVienDAO;
 import entity.NhanVien;
+import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import utils.Auth;
 import utils.MsgBox;
 
 /*
@@ -185,6 +187,11 @@ public class QuanLyNhanVien extends javax.swing.JDialog {
         btnThemNV.setVerifyInputWhenFocusTarget(false);
         btnThemNV.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         btnThemNV.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnThemNV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemNVActionPerformed(evt);
+            }
+        });
 
         btnSuaNV.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Edit.png"))); // NOI18N
         btnSuaNV.setText("SỬA ");
@@ -213,6 +220,14 @@ public class QuanLyNhanVien extends javax.swing.JDialog {
 
         lblGioiTinh.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lblGioiTinh.setText("Giới Tính:");
+
+        txtNgayVaoLam.setForeground(new java.awt.Color(204, 204, 204));
+        txtNgayVaoLam.setText("DD-MM-YYYY");
+        txtNgayVaoLam.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtNgayVaoLamMouseClicked(evt);
+            }
+        });
 
         lblSoDT.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lblSoDT.setText("Số DT:");
@@ -389,15 +404,15 @@ public class QuanLyNhanVien extends javax.swing.JDialog {
 
         tblNhanVien.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "MÃ NV", "TÊN NV", "GIỚI TÍNH", "CHỨC VỤ", "NGÀY VÀO LÀM", "ĐỊA CHỈ", "SỐ ĐT", "MẬT KHẨU"
+                "MÃ NV", "TÊN NV", "GIỚI TÍNH", "CHỨC VỤ", "NGÀY VÀO LÀM", "ĐỊA CHỈ", "SỐ ĐT", "MẬT KHẨU", "KHU VỰC"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -532,6 +547,18 @@ public class QuanLyNhanVien extends javax.swing.JDialog {
             this.edit();
         }
     }//GEN-LAST:event_tblNhanVienMouseClicked
+
+    private void btnThemNVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemNVActionPerformed
+        // TODO add your handling code here:
+        insert();
+        filltable();
+    }//GEN-LAST:event_btnThemNVActionPerformed
+
+    private void txtNgayVaoLamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtNgayVaoLamMouseClicked
+        // TODO add your handling code here:
+        txtNgayVaoLam.setText("");
+        txtNgayVaoLam.setForeground(Color.black);
+    }//GEN-LAST:event_txtNgayVaoLamMouseClicked
 
     /**
      * @param args the command line arguments
@@ -748,7 +775,7 @@ public class QuanLyNhanVien extends javax.swing.JDialog {
         nv.setMaNV(txtMaNV.getText());
         nv.setTenNV(txtTenNV.getText());
         nv.setGioiTinh(rbtNam.isSelected());
-        nv.setGioiTinh(rdoQL.isSelected());
+        nv.setChucvu(rdoQL.isSelected());
 
 
         String ngayVaoLam = txtNgayVaoLam.getText();
@@ -774,6 +801,32 @@ public class QuanLyNhanVien extends javax.swing.JDialog {
         this.setForm(nh);
 
         //this.updateStatus();
+    }
+    void insert(){
+        if(check()){
+            
+//            if(!Auth.isManager()){
+//                MsgBox.alert(this, "Chỉ có quản lí mới có quyền thêm nhân viên!!!");
+//            }else{
+                String maNV = txtMaNV.getText();
+                try {
+                    NhanVien nv = new NhanVienDAO().selectById(maNV);
+                    if (nv != null) {
+                        MsgBox.alert(this, "Bạn đã nhập trùng mã nhân viên");
+                        return;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                NhanVien nv = getForm();
+                try {
+                        new NhanVienDAO().insert(nv);
+                        this.filltable();
+                        MsgBox.alert(this, "Thêm mới thành công");
+                    } catch (Exception e) {
+                        MsgBox.alert(this, "Thêm mới thất bại");
+                    }
+        }
     }
 
 }

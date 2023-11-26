@@ -477,6 +477,9 @@
                     <Property name="verticalAlignment" type="int" value="1"/>
                     <Property name="verticalTextPosition" type="int" value="3"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnThemNVActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="btnSuaNV">
                   <Properties>
@@ -544,6 +547,15 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtNgayVaoLam">
+                  <Properties>
+                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="cc" green="cc" red="cc" type="rgb"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="DD-MM-YYYY"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="txtNgayVaoLamMouseClicked"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtDiaChi">
                 </Component>
@@ -701,7 +713,7 @@
                     <Component class="javax.swing.JTable" name="tblNhanVien">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="8" rowCount="2">
+                          <Table columnCount="9" rowCount="2">
                             <Column editable="false" title="M&#xc3; NV" type="java.lang.Object"/>
                             <Column editable="false" title="T&#xca;N NV" type="java.lang.Object"/>
                             <Column editable="false" title="GI&#x1eda;I T&#xcd;NH" type="java.lang.Object"/>
@@ -710,6 +722,7 @@
                             <Column editable="false" title="&#x110;&#x1eca;A CH&#x1ec8;" type="java.lang.Object"/>
                             <Column editable="false" title="S&#x1ed0; &#x110;T" type="java.lang.Object"/>
                             <Column editable="false" title="M&#x1eac;T KH&#x1ea8;U" type="java.lang.Object"/>
+                            <Column editable="true" title="KHU V&#x1ef0;C" type="java.lang.Object"/>
                           </Table>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -730,6 +743,11 @@
                               <Renderer/>
                             </Column>
                             <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
+                              <Title/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                               <Title/>
                               <Editor/>
                               <Renderer/>
