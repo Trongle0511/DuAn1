@@ -3,11 +3,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package ui;
+
+import dao.NhanVienDAO;
+import dao.SanPhamDao;
+import entity.NhanVien;
+import entity.SanPhamHD;
+import entity.ThemMon;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import utils.MsgBox;
+
 /**
  *
  * @author PC
  */
 public class QuanLyHoaDon extends javax.swing.JDialog {
+
+    int row = -1;
+    private ArrayList<ThemMon> list;
 
     /**
      * Creates new form abc
@@ -15,6 +29,16 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
     public QuanLyHoaDon(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+//        filltable();
+        init();
+    }
+
+    public void init() {
+        setLocationRelativeTo(this);
+        setTitle("Hóa đơn");
+        this.filltable();
+        list = new ArrayList<>();
+//        setForm();
     }
 
     /**
@@ -53,11 +77,11 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
         txtTenMon3 = new javax.swing.JTextField();
         lblGiaDS3 = new javax.swing.JLabel();
         txtGia3 = new javax.swing.JTextField();
-        jsnSoLuong3 = new javax.swing.JSpinner();
         lblSoLuong3 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        txtTongTienSP = new javax.swing.JTextField();
+        txtsoLuong = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
@@ -183,7 +207,20 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
             new String [] {
                 "TÊN MÓN", "GIÁ"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblDanhSachDoUong3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDanhSachDoUong3MouseClicked(evt);
+            }
+        });
         jScrollPane4.setViewportView(tblDanhSachDoUong3);
 
         btnFirst3.setText("|<");
@@ -210,11 +247,22 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
         jButton4.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Accept.png"))); // NOI18N
         jButton4.setText("Thêm Món");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel6.setText("Tổng tiền");
 
-        jTextField4.setEditable(false);
+        txtTongTienSP.setEditable(false);
+
+        txtsoLuong.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtsoLuongKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jpnDanhSachDoUong3Layout = new javax.swing.GroupLayout(jpnDanhSachDoUong3);
         jpnDanhSachDoUong3.setLayout(jpnDanhSachDoUong3Layout);
@@ -222,39 +270,38 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
             jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpnDanhSachDoUong3Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jpnDanhSachDoUong3Layout.createSequentialGroup()
                         .addComponent(lblSoLuong3, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jsnSoLuong3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpnDanhSachDoUong3Layout.createSequentialGroup()
-                            .addComponent(lblTimKiem3)
-                            .addGap(18, 18, 18)
-                            .addComponent(txtTimKiem3, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jpnDanhSachDoUong3Layout.createSequentialGroup()
-                            .addComponent(btnFirst3, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(56, 56, 56)
-                            .addComponent(btnPrev3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(61, 61, 61)
-                            .addComponent(btnNext3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnLast3, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpnDanhSachDoUong3Layout.createSequentialGroup()
-                            .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblTenMonDS3)
-                                .addComponent(lblGiaDS3)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(18, 18, 18)
-                            .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtGia3)
-                                .addComponent(txtTenMon3)
-                                .addGroup(jpnDanhSachDoUong3Layout.createSequentialGroup()
-                                    .addGap(57, 57, 57)
-                                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(0, 0, Short.MAX_VALUE))
-                                .addComponent(jTextField4)))))
+                        .addComponent(txtsoLuong))
+                    .addGroup(jpnDanhSachDoUong3Layout.createSequentialGroup()
+                        .addComponent(lblTimKiem3)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtTimKiem3, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnDanhSachDoUong3Layout.createSequentialGroup()
+                        .addComponent(btnFirst3, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(56, 56, 56)
+                        .addComponent(btnPrev3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(61, 61, 61)
+                        .addComponent(btnNext3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnLast3, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jpnDanhSachDoUong3Layout.createSequentialGroup()
+                        .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblTenMonDS3)
+                            .addComponent(lblGiaDS3)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtGia3)
+                            .addComponent(txtTenMon3)
+                            .addGroup(jpnDanhSachDoUong3Layout.createSequentialGroup()
+                                .addGap(57, 57, 57)
+                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(txtTongTienSP))))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
         jpnDanhSachDoUong3Layout.setVerticalGroup(
@@ -283,12 +330,12 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
                 .addGap(16, 16, 16)
                 .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblSoLuong3)
-                    .addComponent(jsnSoLuong3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtsoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
                 .addGroup(jpnDanhSachDoUong3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                    .addComponent(txtTongTienSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                 .addComponent(jButton4)
                 .addContainerGap())
         );
@@ -303,16 +350,27 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
 
         tblHoaDon.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "TÊN MÓN ", "GIÁ BÁN ", "SỐ LƯỢNG", "TỔNG TIỀN"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane5.setViewportView(tblHoaDon);
+        if (tblHoaDon.getColumnModel().getColumnCount() > 0) {
+            tblHoaDon.getColumnModel().getColumn(0).setResizable(false);
+            tblHoaDon.getColumnModel().getColumn(1).setResizable(false);
+            tblHoaDon.getColumnModel().getColumn(2).setResizable(false);
+            tblHoaDon.getColumnModel().getColumn(3).setResizable(false);
+        }
 
         lblMaNV.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lblMaNV.setText("Mã NV :");
@@ -529,6 +587,22 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tblDanhSachDoUong3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDanhSachDoUong3MouseClicked
+        this.row = tblDanhSachDoUong3.getSelectedRow();
+        edit();
+    }//GEN-LAST:event_tblDanhSachDoUong3MouseClicked
+
+    private void txtsoLuongKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtsoLuongKeyReleased
+        double soLuong = Double.parseDouble(txtsoLuong.getText());
+        double giaBan = Double.parseDouble(txtGia3.getText());
+        txtTongTienSP.setText((soLuong * giaBan) + "");
+    }//GEN-LAST:event_txtsoLuongKeyReleased
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        setForm();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -601,11 +675,9 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JLabel jlabel;
     private javax.swing.JPanel jpnDanhMuc;
     private javax.swing.JPanel jpnDanhSachDoUong3;
-    private javax.swing.JSpinner jsnSoLuong3;
     private javax.swing.JLabel lblGiaDS3;
     private javax.swing.JLabel lblGiamGia;
     private javax.swing.JLabel lblMaNV;
@@ -625,5 +697,61 @@ public class QuanLyHoaDon extends javax.swing.JDialog {
     private javax.swing.JTextField txtTenMon3;
     private javax.swing.JTextField txtTimKiem3;
     private javax.swing.JTextField txtTongTien;
+    private javax.swing.JTextField txtTongTienSP;
+    private javax.swing.JTextField txtsoLuong;
     // End of variables declaration//GEN-END:variables
+
+    void filltable() {
+        DefaultTableModel model = (DefaultTableModel) tblDanhSachDoUong3.getModel();
+        model.setRowCount(0);
+        try {
+            List<SanPhamHD> list = new SanPhamDao().selectAll();
+            for (SanPhamHD sp : list) {
+                Object[] row = {
+                    sp.getTenSP(),
+                    sp.getGiaSP(),};
+                model.addRow(row);
+            }
+        } catch (Exception e) {
+            MsgBox.alert(this, "Lỗi truy vấn");
+        }
+    }
+
+    void setFrom(SanPhamHD sphd) {
+        txtTenMon3.setText(sphd.getTenSP());
+        txtGia3.setText(String.valueOf(sphd.getGiaSP()));
+
+    }
+
+    void edit() {
+        String manh = (String) tblDanhSachDoUong3.getValueAt(this.row, 0);
+        SanPhamHD sphd = new SanPhamDao().selectByName(manh);
+        setFrom(sphd);
+
+    }
+
+    void setForm() {
+        ThemMon tm = new ThemMon();
+        tm.setTenMon(txtTenMon3.getText());
+        tm.setGiaMon(Double.valueOf(txtGia3.getText()));
+        tm.setSoLuongMua(Integer.parseInt(txtsoLuong.getText()));
+        tm.setTongTien(Double.valueOf(txtTongTienSP.getText()));
+
+        list.add(tm);
+        showTable();
+    }
+
+    void showTable() {
+
+        DefaultTableModel model = (DefaultTableModel) tblHoaDon.getModel();
+//        model.setRowCount(0);
+        try {
+            ThemMon tm = list.get(list.size() - 1);
+            model.addRow(new Object[]{
+                tm.getTenMon(), tm.getGiaMon(), tm.getSoLuongMua(), tm.getTongTien()
+            });
+        } catch (Exception e) {
+        }
+    }
+
 }
